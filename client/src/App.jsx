@@ -27,6 +27,8 @@ function App() {
     JSON.parse(localStorage.getItem("darkMode")) || false
   );
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark");
@@ -37,29 +39,43 @@ function App() {
     localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <BrowserRouter>
       <nav className="navbar">
- <div className="logo">
-  <img src="/logo.png" alt="Stretching Krupko" />
-</div>
+        <Link to="/" className="logo" onClick={closeMenu}>
+          <img src="/logo.png" alt="Stretching Krupko" />
+        </Link>
 
-  <div className="nav-links">
-    <Link to="/">Головна</Link>
-    <Link to="/exercises">Вправи</Link>
-    <Link to="/plan">План</Link>
-    <Link to="/workout">Тренування</Link>
-    <Link to="/schedule">Календар</Link>
-    <Link to="/stats">Статистика</Link>
-    <Link to="/profile">Профіль</Link>
-    <Link to="/tutorials">Навчання</Link>
-<Link to="/videos">Відеоуроки</Link>
+        <button
+          className="burger-button"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? "✕" : "☰"}
+        </button>
 
-    <button className="theme-button" onClick={() => setDarkMode(!darkMode)}>
-      {darkMode ? "☀️" : "🌙"}
-    </button>
-  </div>
-</nav>
+        <div className={menuOpen ? "nav-links open" : "nav-links"}>
+          <Link to="/" onClick={closeMenu}>Головна</Link>
+          <Link to="/exercises" onClick={closeMenu}>Вправи</Link>
+          <Link to="/plan" onClick={closeMenu}>План</Link>
+          <Link to="/workout" onClick={closeMenu}>Тренування</Link>
+          <Link to="/schedule" onClick={closeMenu}>Календар</Link>
+          <Link to="/stats" onClick={closeMenu}>Статистика</Link>
+          <Link to="/profile" onClick={closeMenu}>Профіль</Link>
+          <Link to="/tutorials" onClick={closeMenu}>Навчання</Link>
+          <Link to="/videos" onClick={closeMenu}>Відеоуроки</Link>
+
+          <button
+            className="theme-button"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
+      </nav>
 
       <div className="container">
         <Routes>
@@ -74,23 +90,19 @@ function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/chart" element={<ProgressChart />} />
           <Route path="/login" element={<Login />} />
-<Route path="/register" element={<Register />} />
-<Route path="/tutorials" element={<Tutorials />} />
-<Route path="/tutorials/:id" element={<TutorialDetails />} />
-          <Route
-  path="/achievements"
-  element={<Achievements />}
-/>
-<Route path="/about" element={<About />} />
-<Route path="/videos" element={<Videos />} />
-<Route path="*" element={<NotFound />} />
-
+          <Route path="/register" element={<Register />} />
+          <Route path="/tutorials" element={<Tutorials />} />
+          <Route path="/tutorials/:id" element={<TutorialDetails />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/videos" element={<Videos />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+
       <footer className="footer">
-  <p>Stretching Planner © 2026</p>
-  
-</footer>
+        <p>Stretching Krupko © 2026</p>
+      </footer>
     </BrowserRouter>
   );
 }
