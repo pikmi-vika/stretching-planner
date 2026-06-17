@@ -888,15 +888,8 @@ button:hover {
   }
 
   .logo {
-  display: flex;
-  align-items: center;
-}
-
-.logo img {
-  height: 75px;
-  width: auto;
-  object-fit: contain;
-}
+    font-size: 20px;
+  }
 
   .nav-links {
     width: 100%;
@@ -1083,5 +1076,15 @@ button:hover {
 .not-found-card h1 {
   font-size: 90px;
   margin: 0;
+}
+  .logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 75px;
+  width: auto;
+  object-fit: contain;
 }
 
