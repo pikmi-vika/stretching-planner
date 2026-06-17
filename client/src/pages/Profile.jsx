@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+const API_URL = "https://stretching-planner-api.onrender.com";
+
+const defaultProfile = {
+  name: "",
+  email: "",
+  level: "Початковий",
+  goal: "Загальна гнучкість",
+};
+
 function Profile() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    level: "Початковий",
-    goal: "Загальна гнучкість",
-  });
-
+  const [profile, setProfile] = useState(defaultProfile);
   const [isEditing, setIsEditing] = useState(false);
   const [avatar, setAvatar] = useState(localStorage.getItem("avatar") || "");
   const [progress, setProgress] = useState(
@@ -30,20 +33,36 @@ function Profile() {
 
   const totalMinutes = Math.round(totalDuration / 60);
 
+  const normalizeProfile = (data) => ({
+    name: data?.name || "",
+    email: data?.email || "",
+    level: data?.level || "Початковий",
+    goal: data?.goal || "Загальна гнучкість",
+  });
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
       return;
     }
 
-    fetch("https://stretching-planner-api.onrender.com/api/me", {
+    fetch(`${API_URL}/api/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => res.json())
-      .then((data) => setProfile(data))
-      .catch(() => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Помилка авторизації");
+        }
+
+        return res.json();
+      })
+      .then((data) => {
+        setProfile(normalizeProfile(data));
+      })
+      .catch((error) => {
+        console.error("Помилка профілю:", error);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         navigate("/login");
@@ -51,30 +70,37 @@ function Profile() {
   }, [token, navigate]);
 
   const saveProfile = async () => {
-    const res = await fetch("https://stretching-planner-api.onrender.com/api/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        name: profile.name,
-        level: profile.level,
-        goal: profile.goal,
-      }),
-    });
+    try {
+      const res = await fetch(`${API_URL}/api/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: profile?.name || "",
+          level: profile?.level || "Початковий",
+          goal: profile?.goal || "Загальна гнучкість",
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      alert(data.message || "Помилка збереження");
-      return;
+      if (!res.ok) {
+        alert(data.message || "Помилка збереження");
+        return;
+      }
+
+      const updatedProfile = normalizeProfile(data);
+
+      setProfile(updatedProfile);
+      localStorage.setItem("user", JSON.stringify(updatedProfile));
+      setIsEditing(false);
+      alert("Профіль оновлено");
+    } catch (error) {
+      console.error("Помилка збереження:", error);
+      alert("Не вдалося зберегти профіль");
     }
-
-    setProfile(data);
-    localStorage.setItem("user", JSON.stringify(data));
-    setIsEditing(false);
-    alert("Профіль оновлено");
   };
 
   const logout = () => {
@@ -85,6 +111,7 @@ function Profile() {
 
   const changeAvatar = (event) => {
     const file = event.target.files[0];
+
     if (!file) return;
 
     const reader = new FileReader();
@@ -112,7 +139,11 @@ function Profile() {
             {avatar ? (
               <img src={avatar} alt="Аватар користувача" />
             ) : (
-              <span>{profile.name ? profile.name[0].toUpperCase() : "U"}</span>
+              <span>
+                {profile?.name?.length
+                  ? profile.name[0].toUpperCase()
+                  : "U"}
+              </span>
             )}
           </div>
 
@@ -123,12 +154,12 @@ function Profile() {
 
           {!isEditing ? (
             <>
-              <h2>{profile.name || "Користувач"}</h2>
-              <p>{profile.email}</p>
+              <h2>{profile?.name || "Користувач"}</h2>
+              <p>{profile?.email || "Email не вказано"}</p>
 
               <div className="profile-badges">
-                <span>{profile.level}</span>
-                <span>{profile.goal}</span>
+                <span>{profile?.level || "Початковий"}</span>
+                <span>{profile?.goal || "Загальна гнучкість"}</span>
               </div>
 
               <button onClick={() => setIsEditing(true)}>
@@ -142,20 +173,26 @@ function Profile() {
               <label>Імʼя</label>
               <input
                 type="text"
-                value={profile.name}
+                value={profile?.name || ""}
                 onChange={(e) =>
-                  setProfile({ ...profile, name: e.target.value })
+                  setProfile({
+                    ...profile,
+                    name: e.target.value,
+                  })
                 }
               />
 
               <label>Email</label>
-              <input type="email" value={profile.email} disabled />
+              <input type="email" value={profile?.email || ""} disabled />
 
               <label>Рівень підготовки</label>
               <select
-                value={profile.level}
+                value={profile?.level || "Початковий"}
                 onChange={(e) =>
-                  setProfile({ ...profile, level: e.target.value })
+                  setProfile({
+                    ...profile,
+                    level: e.target.value,
+                  })
                 }
               >
                 <option>Початковий</option>
@@ -166,9 +203,12 @@ function Profile() {
 
               <label>Тип занять / ціль</label>
               <select
-                value={profile.goal}
+                value={profile?.goal || "Загальна гнучкість"}
                 onChange={(e) =>
-                  setProfile({ ...profile, goal: e.target.value })
+                  setProfile({
+                    ...profile,
+                    goal: e.target.value,
+                  })
                 }
               >
                 <option>Загальна гнучкість</option>
@@ -183,9 +223,7 @@ function Profile() {
 
               <button onClick={saveProfile}>Зберегти зміни</button>
 
-              <button onClick={() => setIsEditing(false)}>
-                Скасувати
-              </button>
+              <button onClick={() => setIsEditing(false)}>Скасувати</button>
             </div>
           )}
         </div>
@@ -235,7 +273,8 @@ function Profile() {
         <h2>Моя ціль</h2>
 
         <p>
-          <strong>Поточна ціль:</strong> {profile.goal}
+          <strong>Поточна ціль:</strong>{" "}
+          {profile?.goal || "Загальна гнучкість"}
         </p>
 
         <div className="progress-bar-wrapper">
