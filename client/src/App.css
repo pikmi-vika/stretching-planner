@@ -1087,4 +1087,18 @@ button:hover {
   width: auto;
   object-fit: contain;
 }
+.logo img {
+  width: 78px !important;
+  height: 78px !important;
+  object-fit: contain !important;
+}
+
+.hero-text h1 {
+  color: #8df59a !important;
+  text-shadow: 0 0 25px rgba(102, 187, 106, 0.4);
+}
+
+.features-grid {
+  margin-top: 35px !important;
+}
 
