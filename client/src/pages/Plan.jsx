@@ -11,7 +11,7 @@ function Plan() {
   const [goal, setGoal] = useState("Загальна гнучкість");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/exercises")
+    fetch("https://stretching-planner-api.onrender.com/api/exercises/${id}")
       .then((res) => res.json())
       .then((data) => setExercises(data))
       .catch((error) => console.error("Помилка:", error));
@@ -19,7 +19,7 @@ function Plan() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:5000/api/me", {
+      fetch("https://stretching-planner-api.onrender.com/api/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

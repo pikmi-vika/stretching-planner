@@ -127,7 +127,7 @@ function TutorialDetails() {
   }
 
   const createPlan = async () => {
-    const res = await fetch("http://localhost:5000/api/exercises");
+    const res = await fetch("https://stretching-planner-api.onrender.com/api/exercises");
     const exercises = await res.json();
 
     const selected = exercises.filter(

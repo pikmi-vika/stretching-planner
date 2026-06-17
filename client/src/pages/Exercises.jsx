@@ -8,22 +8,32 @@ function Exercises() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/exercises")
+    fetch(
+      "https://stretching-planner-api.onrender.com/api/exercises"
+    )
       .then((res) => res.json())
       .then((data) => setExercises(data))
       .catch((error) => console.error("Помилка:", error));
   }, []);
 
   const addToPlan = (exercise) => {
-    const currentPlan = JSON.parse(localStorage.getItem("plan")) || [];
-    const alreadyAdded = currentPlan.find((item) => item.id === exercise.id);
+    const currentPlan =
+      JSON.parse(localStorage.getItem("plan")) || [];
+
+    const alreadyAdded = currentPlan.find(
+      (item) => item.id === exercise.id
+    );
 
     if (alreadyAdded) {
       alert("Ця вправа вже є у плані");
       return;
     }
 
-    localStorage.setItem("plan", JSON.stringify([...currentPlan, exercise]));
+    localStorage.setItem(
+      "plan",
+      JSON.stringify([...currentPlan, exercise])
+    );
+
     alert("Вправу додано до плану");
   };
 
@@ -33,12 +43,18 @@ function Exercises() {
       .includes(search.toLowerCase());
 
     const matchesDifficulty =
-      difficulty === "Усі" || exercise.difficulty === difficulty;
+      difficulty === "Усі" ||
+      exercise.difficulty === difficulty;
 
     const matchesCategory =
-      category === "Усі" || exercise.category === category;
+      category === "Усі" ||
+      exercise.category === category;
 
-    return matchesSearch && matchesDifficulty && matchesCategory;
+    return (
+      matchesSearch &&
+      matchesDifficulty &&
+      matchesCategory
+    );
   });
 
   return (
@@ -63,7 +79,10 @@ function Exercises() {
           <option>Просунутий</option>
         </select>
 
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option>Усі</option>
           <option>Розтяжка спини</option>
           <option>Місток</option>
@@ -81,28 +100,40 @@ function Exercises() {
           <p>Вправ не знайдено.</p>
         ) : (
           filteredExercises.map((exercise) => (
-            <div className="exercise-card" key={exercise.id}>
+            <div
+              className="exercise-card"
+              key={exercise.id}
+            >
               <h2>{exercise.title}</h2>
 
               <p>{exercise.description}</p>
 
               <p>
-                <strong>Складність:</strong> {exercise.difficulty}
+                <strong>Складність:</strong>{" "}
+                {exercise.difficulty}
               </p>
 
               <p>
-                <strong>Категорія:</strong> {exercise.category}
+                <strong>Категорія:</strong>{" "}
+                {exercise.category}
               </p>
 
               <p>
-                <strong>Тривалість:</strong> {exercise.duration} сек
+                <strong>Тривалість:</strong>{" "}
+                {exercise.duration} сек
               </p>
 
-              <Link to={`/exercises/${exercise.id}`}>
+              <Link
+                to={`/exercises/${exercise.id}`}
+              >
                 <button>Почати</button>
               </Link>
 
-              <button onClick={() => addToPlan(exercise)}>
+              <button
+                onClick={() =>
+                  addToPlan(exercise)
+                }
+              >
                 Додати до плану
               </button>
             </div>

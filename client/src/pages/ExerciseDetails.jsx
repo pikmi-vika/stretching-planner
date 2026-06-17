@@ -9,14 +9,13 @@ function ExerciseDetails() {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/exercises/${id}`)
+    fetch(
+      `https://stretching-planner-api.onrender.com/api/exercises/${id}`
+    )
       .then((res) => res.json())
       .then((data) => {
         setExercise(data);
-        setTimeLeft(data.duration || 0);
-      })
-      .catch((error) => {
-        console.error("Помилка завантаження вправи:", error);
+        setTimeLeft(data.duration);
       });
   }, [id]);
 
@@ -43,24 +42,12 @@ function ExerciseDetails() {
       <div className="details-card">
         <h1>{exercise.title}</h1>
 
-        <p className="exercise-description">{exercise.description}</p>
+        <p>{exercise.description}</p>
 
         <div className="exercise-info">
-          <p>
-            <strong>Складність:</strong> {exercise.difficulty}
-          </p>
-
-          <p>
-            <strong>Група мʼязів:</strong> {exercise.muscleGroup}
-          </p>
-
-          <p>
-            <strong>Категорія:</strong> {exercise.category}
-          </p>
-
-          <p>
-            <strong>Тривалість:</strong> {exercise.duration} сек
-          </p>
+          <span>Складність: {exercise.difficulty}</span>
+          <span>Група мʼязів: {exercise.muscleGroup}</span>
+          <span>Тривалість: {exercise.duration} сек</span>
         </div>
 
         <div className="animation-box">
@@ -75,44 +62,28 @@ function ExerciseDetails() {
           )}
         </div>
 
-        <div className="timer">{timeLeft} сек</div>
+        <div className="timer">
+          {timeLeft} сек
+        </div>
 
         <div className="timer-buttons">
-          <button onClick={() => setIsActive(true)}>Старт</button>
+          <button onClick={() => setIsActive(true)}>
+            Старт
+          </button>
 
-          <button onClick={() => setIsActive(false)}>Пауза</button>
+          <button onClick={() => setIsActive(false)}>
+            Пауза
+          </button>
 
           <button
             onClick={() => {
               setIsActive(false);
-              setTimeLeft(exercise.duration || 0);
+              setTimeLeft(exercise.duration);
             }}
           >
             Скинути
           </button>
         </div>
-
-        {exercise.steps && (
-          <div className="instruction-box">
-            <h2>Як виконувати</h2>
-
-            {exercise.steps.map((step, index) => (
-              <p key={index}>
-                <strong>{index + 1}.</strong> {step}
-              </p>
-            ))}
-          </div>
-        )}
-
-        {exercise.mistakes && (
-          <div className="instruction-box">
-            <h2>Типові помилки</h2>
-
-            {exercise.mistakes.map((mistake, index) => (
-              <p key={index}>• {mistake}</p>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

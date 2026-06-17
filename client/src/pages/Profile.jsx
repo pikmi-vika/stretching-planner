@@ -36,7 +36,7 @@ function Profile() {
       return;
     }
 
-    fetch("http://localhost:5000/api/me", {
+    fetch("https://stretching-planner-api.onrender.com/api/me", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -51,7 +51,7 @@ function Profile() {
   }, [token, navigate]);
 
   const saveProfile = async () => {
-    const res = await fetch("http://localhost:5000/api/profile", {
+    const res = await fetch("https://stretching-planner-api.onrender.com/api/profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

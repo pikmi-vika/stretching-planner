@@ -12,7 +12,7 @@ function Login() {
   const login = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/login", {
+    const res = await fetch( "https://stretching-planner-api.onrender.com/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
