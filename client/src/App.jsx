@@ -18,6 +18,7 @@ import Register from "./pages/Register";
 import Tutorials from "./pages/Tutorials";
 import TutorialDetails from "./pages/TutorialDetails";
 import Videos from "./pages/Videos";
+import NotFound from "./pages/NotFound";
 
 import "./App.css";
 
@@ -39,10 +40,9 @@ function App() {
   return (
     <BrowserRouter>
       <nav className="navbar">
-  <Link to="/" className="logo">
-    <span className="logo-icon">🤸‍♀️</span>
-    <span>Stretching Planner</span>
-  </Link>
+ <div className="logo">
+  <img src="/logo.png" alt="Stretching Krupko" />
+</div>
 
   <div className="nav-links">
     <Link to="/">Головна</Link>
@@ -83,9 +83,14 @@ function App() {
 />
 <Route path="/about" element={<About />} />
 <Route path="/videos" element={<Videos />} />
+<Route path="*" element={<NotFound />} />
 
         </Routes>
       </div>
+      <footer className="footer">
+  <p>Stretching Planner © 2026</p>
+  
+</footer>
     </BrowserRouter>
   );
 }
