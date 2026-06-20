@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const JWT_SECRET = "stretching_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET || "stretching_secret_key";
 
 const exercises = [
   {
@@ -568,19 +568,24 @@ app.put("/api/profile", authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-app.get("/api/exercises", (req, res) => {
-  res.json(exercises);
-});
+app.get("/api/debug/users", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        level: true,
+        goal: true,
+        createdAt: true,
+      },
+    });
 
-app.get("/api/exercises/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const exercise = exercises.find((item) => item.id === id);
-
-  if (!exercise) {
-    return res.status(404).json({ message: "Вправу не знайдено" });
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Помилка читання користувачів" });
   }
-
-  res.json(exercise);
 });
 
 app.listen(5000, () => {
