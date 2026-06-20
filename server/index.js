@@ -569,23 +569,18 @@ app.put("/api/profile", authMiddleware, async (req, res) => {
 });
 
 app.get("/api/debug/users", async (req, res) => {
-  try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        level: true,
-        goal: true,
-        createdAt: true,
-      },
-    });
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      level: true,
+      goal: true,
+      createdAt: true,
+    },
+  });
 
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Помилка читання користувачів" });
-  }
+  res.json(users);
 });
 
 app.listen(5000, () => {
