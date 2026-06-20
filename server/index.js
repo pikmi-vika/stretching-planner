@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
@@ -568,20 +570,7 @@ app.put("/api/profile", authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-app.get("/api/debug/users", async (req, res) => {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      level: true,
-      goal: true,
-      createdAt: true,
-    },
-  });
 
-  res.json(users);
-});
 
 app.listen(5000, () => {
   console.log("Server is running on port 5000");
