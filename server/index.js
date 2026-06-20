@@ -569,8 +569,21 @@ app.put("/api/profile", authMiddleware, async (req, res) => {
 
   res.json(user);
 });
+app.get("/api/exercises", (req, res) => {
+  res.json(exercises);
+});
 
+app.get("/api/exercises/:id", (req, res) => {
+  const id = Number(req.params.id);
 
+  const exercise = exercises.find((item) => item.id === id);
+
+  if (!exercise) {
+    return res.status(404).json({ message: "Вправу не знайдено" });
+  }
+
+  res.json(exercise);
+});
 
 app.listen(5000, () => {
   console.log("Server is running on port 5000");
