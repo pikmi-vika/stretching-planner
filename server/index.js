@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const nodemailer = require("nodemailer");
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
@@ -13,6 +14,16 @@ app.use(cors());
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || "stretching_secret_key";
+const FRONTEND_URL =
+  process.env.FRONTEND_URL || "https://stretching-planner.vercel.app";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 const exercises = [
   {
@@ -463,6 +474,22 @@ app.post("/api/register", async (req, res) => {
         password: hashedPassword,
       },
     });
+    await transporter.sendMail({
+  from: `"Stretching Krupko" <${process.env.EMAIL_USER}>`,
+  to: email,
+  subject: "Вітаємо у Stretching Krupko!",
+  html: `
+    <div style="font-family: Arial; background:#111; color:#fff; padding:24px;">
+      <h1 style="color:#43a047;">Вітаємо, ${name}!</h1>
+      <p>Ви успішно зареєструвалися у Stretching Krupko.</p>
+      <p>Тепер можете створювати плани тренувань і відстежувати прогрес.</p>
+      <a href="${FRONTEND_URL}/login"
+        style="display:inline-block;padding:12px 20px;background:#2e7d32;color:white;text-decoration:none;border-radius:10px;">
+        Увійти в акаунт
+      </a>
+    </div>
+  `,
+});
 
     res.json({
       message: "Реєстрація успішна",
