@@ -1258,4 +1258,229 @@ button:hover {
     max-width: 100%;
   }
 }
+/* FIX: profile text visibility */
+.profile-main-card h2,
+.profile-main-card p,
+.profile-progress-card h2,
+.profile-progress-card p,
+.details-card h2,
+.details-card p {
+  color: #ffffff;
+}
+
+.profile-main-card h2 {
+  color: #9be7a1 !important;
+}
+
+/* FIX: login / register forms */
+.details-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.details-card form label {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 6px;
+}
+
+.details-card form input,
+.details-card form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #3f3f3f;
+  background: #202020;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.details-card form input:focus,
+.details-card form select:focus {
+  outline: none;
+  border-color: #43a047;
+  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.25);
+}
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .container {
+    padding: 24px 18px;
+  }
+
+  .profile-layout {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+  }
+
+  .details-card {
+    max-width: 100%;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .exercise-list {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* PHONE */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding: 18px 14px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  h1 {
+    font-size: 34px !important;
+    line-height: 1.15;
+    text-align: center;
+    word-break: normal;
+  }
+
+  .details-page {
+    padding: 0 !important;
+  }
+
+  .details-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    padding: 24px 18px !important;
+    border-radius: 24px !important;
+  }
+
+  .details-card form {
+    align-items: stretch;
+  }
+
+  .details-card form label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+  }
+
+  .details-card form input,
+  .details-card form select {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .details-card button,
+  .details-card form button {
+    width: 100%;
+    max-width: 100%;
+    margin-top: 8px;
+  }
+
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 22px;
+  }
+
+  .profile-main-card {
+    text-align: center;
+  }
+
+  .profile-avatar {
+    width: 210px !important;
+    height: 210px !important;
+    margin: 0 auto 18px;
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px;
+  }
+
+  .profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .profile-actions a,
+  .profile-actions button {
+    width: 100%;
+  }
+
+  .profile-progress-card {
+    text-align: center;
+  }
+
+  .progress-bar-wrapper {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .progress-bar {
+    width: 100%;
+  }
+
+  .exercise-list,
+  .video-grid,
+  .schedule-list {
+    grid-template-columns: 1fr !important;
+  }
+
+  .exercise-card,
+  .video-card,
+  .schedule-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 24px 12px;
+  }
+}
+
+/* SMALL PHONE */
+@media (max-width: 420px) {
+  h1 {
+    font-size: 30px !important;
+  }
+
+  .details-card {
+    padding: 22px 16px !important;
+  }
+
+  .profile-avatar {
+    width: 180px !important;
+    height: 180px !important;
+  }
+
+  .profile-stats {
+    grid-template-columns: 1fr !important;
+  }
+}
 
