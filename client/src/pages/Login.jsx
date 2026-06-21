@@ -35,8 +35,8 @@ function Login() {
   };
 
   return (
-    <div className="details-page">
-      <div className="details-card">
+    <div className="auth-page">
+  <div className="details-card auth-card">
         <h1>Вхід</h1>
 
         <form onSubmit={login}>

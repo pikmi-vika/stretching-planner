@@ -33,8 +33,8 @@ function Register() {
   };
 
   return (
-    <div className="details-page">
-      <div className="details-card">
+    <div className="auth-page">
+  <div className="details-card auth-card">
         <h1>Реєстрація</h1>
 
         <form onSubmit={register}>
