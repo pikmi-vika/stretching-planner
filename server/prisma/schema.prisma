@@ -15,4 +15,6 @@ model User {
   level     String   @default("Початковий")
   goal      String   @default("Загальна гнучкість")
   createdAt DateTime @default(now())
+  resetToken        String?
+resetTokenExpires DateTime?
 }

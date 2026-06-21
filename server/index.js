@@ -5,7 +5,7 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-
+const crypto = require("crypto");
 const prisma = require("./prismaClient");
 
 const app = express();
@@ -572,6 +572,104 @@ await sendEmail({
         goal: user.goal,
       },
     });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+app.post("/api/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.json({
+        message: "Якщо акаунт існує, лист для відновлення пароля буде надіслано",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpires = new Date(Date.now() + 1000 * 60 * 30);
+
+    await prisma.user.update({
+      where: { email },
+      data: {
+        resetToken,
+        resetTokenExpires,
+      },
+    });
+
+    const resetLink = `${FRONTEND_URL}/reset-password/${resetToken}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: "Відновлення пароля Stretching Krupko",
+      html: `
+        <div style="font-family:Arial;background:#111;color:#fff;padding:24px">
+          <h1 style="color:#43a047">Відновлення пароля</h1>
+          <p>Натисніть кнопку нижче, щоб змінити пароль.</p>
+          <p>Посилання дійсне 30 хвилин.</p>
+          <a href="${resetLink}"
+            style="display:inline-block;background:#2e7d32;color:#fff;padding:12px 20px;border-radius:10px;text-decoration:none">
+            Змінити пароль
+          </a>
+        </div>
+      `,
+    });
+
+    res.json({
+      message: "Якщо акаунт існує, лист для відновлення пароля буде надіслано",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+app.post("/api/reset-password", async (req, res) => {
+  try {
+    const { token, password } = req.body;
+
+    const user = await prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpires: {
+          gt: new Date(),
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Посилання недійсне або термін дії минув",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpires: null,
+      },
+    });
+
+    await sendEmail({
+      to: user.email,
+      subject: "Пароль змінено",
+      html: `
+        <div style="font-family:Arial;background:#111;color:#fff;padding:24px">
+          <h1 style="color:#43a047">Пароль змінено</h1>
+          <p>Ваш пароль у Stretching Krupko успішно змінено.</p>
+        </div>
+      `,
+    });
+
+    res.json({ message: "Пароль успішно змінено" });
   } catch (error) {
     res.status(500).json({ message: "Помилка сервера" });
   }
