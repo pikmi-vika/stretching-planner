@@ -1499,12 +1499,7 @@ button:hover {
   color: #ffffff !important;
   opacity: 1 !important;
 }
-.plan-page h1,
-.plan-page h2,
-.plan-page p,
-.plan-page strong {
-  color: #ffffff;
-}
+
 
 .plan-page h1,
 .plan-page .exercise-card h2 {
@@ -1539,10 +1534,7 @@ button:hover {
     width: 100%;
   }
 }
-.plan-page,
-.plan-page * {
-  color: #ffffff !important;
-}
+
 
 .plan-page h1,
 .plan-page h2,
@@ -1550,10 +1542,7 @@ button:hover {
   color: #2f8f3a !important;
 }
 
-.plan-page .section-title {
-  color: #ffffff !important;
-  opacity: 1 !important;
-}
+
 
 .plan-page .details-card,
 .plan-page .exercise-card {
@@ -1565,5 +1554,52 @@ button:hover {
   justify-content: center !important;
   gap: 14px !important;
   flex-wrap: wrap !important;
+}
+.plan-page h1 {
+  color: #2f8f3a !important;
+}
+
+.plan-page > h2,
+.plan-page .section-title,
+.plan-page .empty-plan {
+  color: #222 !important;
+  text-align: center;
+}
+
+.plan-page .details-card,
+.plan-page .exercise-card {
+  background: #181818 !important;
+}
+
+.plan-page .details-card p,
+.plan-page .details-card strong,
+.plan-page .exercise-card p {
+  color: white !important;
+}
+
+.plan-page .exercise-card h2 {
+  color: #2f8f3a !important;
+}
+
+.plan-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.plan-buttons a {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .plan-buttons {
+    flex-direction: column;
+  }
+
+  .plan-buttons button,
+  .plan-buttons a {
+    width: 100%;
+  }
 }
 
