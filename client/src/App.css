@@ -1531,3 +1531,9 @@ button:hover {
     width: 100%;
   }
 }
+.plan-page > h2 {
+  color: white !important;
+}
+.plan-page h2 {
+  color: #7446f4 !important;
+}
