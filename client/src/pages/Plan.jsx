@@ -9,12 +9,20 @@ function Plan() {
   const [exercises, setExercises] = useState([]);
   const [level, setLevel] = useState("Початковий");
   const [goal, setGoal] = useState("Загальна гнучкість");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://stretching-planner-api.onrender.com/api/exercises/${id}")
+    fetch("https://stretching-planner-api.onrender.com/api/exercises")
       .then((res) => res.json())
-      .then((data) => setExercises(data))
-      .catch((error) => console.error("Помилка:", error));
+      .then((data) => {
+        setExercises(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Помилка вправ:", error);
+        setExercises([]);
+        setLoading(false);
+      });
 
     const token = localStorage.getItem("token");
 
@@ -24,8 +32,12 @@ function Plan() {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) return null;
+          return res.json();
+        })
         .then((user) => {
+          if (!user) return;
           setLevel(user.level || "Початковий");
           setGoal(user.goal || "Загальна гнучкість");
         })
@@ -59,7 +71,8 @@ function Plan() {
 
     if (goal !== "Загальна гнучкість") {
       recommended = recommended.filter(
-        (exercise) => exercise.category === goal || exercise.muscleGroup === goal
+        (exercise) =>
+          exercise.category === goal || exercise.muscleGroup === goal
       );
     }
 
@@ -75,20 +88,18 @@ function Plan() {
   };
 
   const removeExercise = (id) => {
-    const updatedPlan = plan.filter((exercise) => exercise.id !== id);
-    savePlan(updatedPlan);
+    savePlan(plan.filter((exercise) => exercise.id !== id));
   };
 
   const clearPlan = () => {
     savePlan([]);
-    localStorage.removeItem("plan");
   };
 
   return (
-    <div>
+    <div className="plan-page">
       <h1>Мій план тренувань</h1>
 
-      <div className="details-card">
+      <div className="details-card plan-top-card">
         <p>
           <strong>Рівень:</strong> {level}
         </p>
@@ -97,22 +108,24 @@ function Plan() {
           <strong>Ціль із профілю:</strong> {goal}
         </p>
 
-        <button onClick={generateRecommendedPlan}>
-          Створити рекомендований план
-        </button>
+        <div className="plan-buttons">
+          <button onClick={generateRecommendedPlan} disabled={loading}>
+            {loading ? "Завантаження..." : "Створити рекомендований план"}
+          </button>
 
-        {plan.length > 0 && (
-          <>
-            <Link to="/workout">
-              <button>Почати тренування</button>
-            </Link>
+          {plan.length > 0 && (
+            <>
+              <Link to="/workout">
+                <button>Почати тренування</button>
+              </Link>
 
-            <button onClick={clearPlan}>Очистити план</button>
-          </>
-        )}
+              <button onClick={clearPlan}>Очистити план</button>
+            </>
+          )}
+        </div>
       </div>
 
-      <h2>Готові навчальні програми</h2>
+      <h2 className="section-title">Готові навчальні програми</h2>
 
       <div className="exercise-list">
         <div className="exercise-card">
@@ -156,19 +169,25 @@ function Plan() {
         </div>
       </div>
 
-      <h2>Поточний план</h2>
+      <h2 className="section-title">Поточний план</h2>
 
       {plan.length === 0 ? (
-        <p>План поки порожній.</p>
+        <p className="empty-plan">План поки порожній.</p>
       ) : (
         <div className="exercise-list">
           {plan.map((exercise) => (
             <div className="exercise-card" key={exercise.id}>
               <h2>{exercise.title}</h2>
               <p>{exercise.description}</p>
-              <p>Складність: {exercise.difficulty}</p>
-              <p>Категорія: {exercise.category}</p>
-              <p>Тривалість: {exercise.duration} сек</p>
+              <p>
+                <strong>Складність:</strong> {exercise.difficulty}
+              </p>
+              <p>
+                <strong>Категорія:</strong> {exercise.category}
+              </p>
+              <p>
+                <strong>Тривалість:</strong> {exercise.duration} сек
+              </p>
 
               <button onClick={() => removeExercise(exercise.id)}>
                 Видалити
