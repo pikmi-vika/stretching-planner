@@ -45,13 +45,14 @@ const sendEmail = async ({ to, subject, html }) => {
   }
 };
 
+
   await transporter.sendMail({
     from: `"Stretching Krupko" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,
   });
-};
+
 
 const exercises = [
   {
