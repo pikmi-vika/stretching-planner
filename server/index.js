@@ -1,10 +1,10 @@
 require("dotenv").config();
 
-const nodemailer = require("nodemailer");
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 const prisma = require("./prismaClient");
 
@@ -24,6 +24,20 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
+
+const sendEmail = async ({ to, subject, html }) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log("Email env not configured");
+    return;
+  }
+
+  await transporter.sendMail({
+    from: `"Stretching Krupko" <${process.env.EMAIL_USER}>`,
+    to,
+    subject,
+    html,
+  });
+};
 
 const exercises = [
   {
@@ -474,24 +488,19 @@ app.post("/api/register", async (req, res) => {
         password: hashedPassword,
       },
     });
-    await transporter.sendMail({
-  from: `"Stretching Krupko" <${process.env.EMAIL_USER}>`,
-  to: email,
+   await sendEmail({
+  to: user.email,
   subject: "Вітаємо у Stretching Krupko!",
   html: `
-    <div style="font-family: Arial; background:#111; color:#fff; padding:24px;">
-      <h1 style="color:#43a047;">Вітаємо, ${name}!</h1>
+    <div style="font-family:Arial;background:#111;color:#fff;padding:24px">
+      <h1 style="color:#43a047">Вітаємо, ${user.name}!</h1>
       <p>Ви успішно зареєструвалися у Stretching Krupko.</p>
-      <p>Тепер можете створювати плани тренувань і відстежувати прогрес.</p>
-      <a href="${FRONTEND_URL}/login"
-        style="display:inline-block;padding:12px 20px;background:#2e7d32;color:white;text-decoration:none;border-radius:10px;">
-        Увійти в акаунт
-      </a>
+      <a href="${FRONTEND_URL}/login" style="color:#9be7a1">Увійти</a>
     </div>
   `,
 });
 
-    res.json({
+  res.json({
       message: "Реєстрація успішна",
       user: {
         id: user.id,
@@ -527,7 +536,16 @@ app.post("/api/login", async (req, res) => {
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: "7d",
     });
-
+await sendEmail({
+  to: user.email,
+  subject: "Вхід у Stretching Krupko",
+  html: `
+    <div style="font-family:Arial;background:#111;color:#fff;padding:24px">
+      <h1 style="color:#43a047">Вхід виконано</h1>
+      <p>У ваш акаунт Stretching Krupko щойно виконано вхід.</p>
+    </div>
+  `,
+});
     res.json({
       message: "Вхід успішний",
       token,
@@ -593,6 +611,18 @@ app.put("/api/profile", authMiddleware, async (req, res) => {
       createdAt: true,
     },
   });
+  await sendEmail({
+  to: user.email,
+  subject: "Профіль оновлено",
+  html: `
+    <div style="font-family:Arial;background:#111;color:#fff;padding:24px">
+      <h1 style="color:#43a047">Профіль оновлено</h1>
+      <p>Ваші дані профілю успішно змінено.</p>
+      <p><strong>Рівень:</strong> ${user.level}</p>
+      <p><strong>Ціль:</strong> ${user.goal}</p>
+    </div>
+  `,
+});
 
   res.json(user);
 });
