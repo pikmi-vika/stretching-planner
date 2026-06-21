@@ -1531,8 +1531,13 @@ button:hover {
     width: 100%;
   }
 }
-.plan-page h2,
+.plan-page > h2,
 .plan-page .section-title,
 .plan-page .empty-plan {
-  color: #f0eef5 !important;
+  color: #222222 !important;   /* темний для білого фону */
+  text-align: center;
+}
+
+.plan-page .exercise-card h2 {
+  color: #2f8f3a !important;   /* зелений всередині чорних карток */
 }
