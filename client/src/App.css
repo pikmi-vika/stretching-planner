@@ -1531,9 +1531,8 @@ button:hover {
     width: 100%;
   }
 }
-.plan-page > h2 {
-  color: white !important;
-}
-.plan-page h2 {
-  color: #d6d6d6 !important;
+.plan-page h2,
+.plan-page .section-title,
+.plan-page .empty-plan {
+  color: #f0eef5 !important;
 }
