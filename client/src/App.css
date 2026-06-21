@@ -1541,3 +1541,13 @@ button:hover {
 .plan-page .exercise-card h2 {
   color: #2f8f3a !important;   /* зелений всередині чорних карток */
 }
+.plan-page .section-title {
+  color: #43a047 !important;
+  opacity: 1 !important;
+  text-shadow: 0 0 12px rgba(67, 160, 71, 0.35);
+}
+
+.plan-page > h2 {
+  color: #43a047 !important;
+  opacity: 1 !important;
+}
