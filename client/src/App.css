@@ -1491,7 +1491,7 @@ button:hover {
 .plan-page > h2,
 .plan-page .section-title,
 .plan-page .empty-plan {
-  color: #222 !important;
+  color: #d6d6d6 !important;
   text-align: center;
 }
 
@@ -1535,5 +1535,5 @@ button:hover {
   color: white !important;
 }
 .plan-page h2 {
-  color: #7446f4 !important;
+  color: #d6d6d6 !important;
 }
