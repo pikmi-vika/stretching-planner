@@ -30,18 +30,23 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async ({ to, subject, html }) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    throw new Error("EMAIL_USER або EMAIL_PASS не налаштовані в Render");
+  try {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.log("Email env not configured");
+      return;
+    }
+
+    await transporter.sendMail({
+      from: `"Stretching Krupko" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    });
+
+    console.log("Email sent to:", to);
+  } catch (error) {
+    console.error("Email error:", error.message);
   }
-
-  await transporter.sendMail({
-    from: `"Stretching Krupko" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html,
-  });
-
-  console.log("Email sent to:", to);
 };
 
 
