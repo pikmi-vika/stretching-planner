@@ -125,7 +125,9 @@ function Plan() {
         </div>
       </div>
 
-      <h2 className="section-title">Готові навчальні програми</h2>
+      <div style={{ textAlign: "center" }}>
+  <h2 className="section-title">Готові навчальні програми</h2>
+</div>
 
       <div className="exercise-list">
         <div className="exercise-card">

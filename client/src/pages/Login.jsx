@@ -66,6 +66,9 @@ function Login() {
         <p>
           Немає акаунта? <Link to="/register">Реєстрація</Link>
         </p>
+        <p>
+  <Link to="/forgot-password">Забули пароль?</Link>
+</p>
       </div>
     </div>
   );

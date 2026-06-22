@@ -19,6 +19,8 @@ import Tutorials from "./pages/Tutorials";
 import TutorialDetails from "./pages/TutorialDetails";
 import Videos from "./pages/Videos";
 import NotFound from "./pages/NotFound";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import "./App.css";
 
@@ -97,6 +99,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/videos" element={<Videos />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </div>
 
