@@ -517,9 +517,10 @@ app.post("/api/register", async (req, res) => {
         goal: user.goal,
       },
     });
-  } catch (error) {
-    res.status(500).json({ message: "Помилка сервера" });
-  }
+ } catch (error) {
+  console.error("LOGIN ERROR:", error);
+  res.status(500).json({ message: error.message });
+}
 });
 
 app.post("/api/login", async (req, res) => {
